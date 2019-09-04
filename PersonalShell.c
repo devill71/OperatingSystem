@@ -8,7 +8,8 @@
 #include<sys/wait.h> 
 #include<readline/readline.h> 
 #include<readline/history.h> 
-#include "ls.c"  
+#include<sys/stat.h>
+#include<fcntl.h> 
 #define MAXCOM 1000 // max number of letters to be supported 
 #define MAXLIST 100 // max number of commands to be supported 
   
@@ -57,7 +58,7 @@ void printDir()
 } 
   
 // Function where the system command is executed 
-void execArgs(char** parsed,int argc,char **argv)
+void execArgs(char** parsed,int count)
 { 
      char *str=(char *)malloc(50*sizeof(char));
     // Forking a child 
@@ -67,12 +68,18 @@ void execArgs(char** parsed,int argc,char **argv)
         printf("\nFailed forking child.."); 
         return; 
     } else if (pid == 0) {
-	   if(strcmp(parsed[0],"ls")==0) 
-	    	myls(argc,argv);
-	   else
-        //if (execvp(parsed[0], parsed) < 0) { 
+	if(count==3){
+	    if(strcmp(parsed[1],">")==0){
+	    	int fileid = open(parsed[2],O_WRONLY|O_CREAT,0666);
+	    	close(1);
+	    	dup(fileid);
+	    	execlp(parsed[0],parsed[0],NULL);
+	    	printf("execlp error");
+	    }
+	}
+	if (execvp(parsed[0], parsed) < 0) { 
             printf("\nCould not execute command.."); 
-        //} 
+        } 
         exit(0); 
     } else { 
         // waiting for child to terminate 
@@ -89,10 +96,9 @@ void openHelp()
         "\nList of Commands supported:"
         "\n>cd"
         "\n>ls"
-        "\n>exiti"
+        "\n>exit"
         "\n>all other general commands available in UNIX shell"
-        "\n>pipe handling"
-        "\n>improper space handling"); 
+	"\n"); 
   
     return; 
 } 
@@ -100,15 +106,14 @@ void openHelp()
 // Function to execute builtin commands 
 int ownCmdHandler(char** parsed) 
 { 
-    int NoOfOwnCmds = 5, i, switchOwnArg = 0; 
+    int NoOfOwnCmds = 4, i, switchOwnArg = 0; 
     char* ListOfOwnCmds[NoOfOwnCmds]; 
     char* username; 
   
     ListOfOwnCmds[0] = "exit"; 
-    ListOfOwnCmds[1] = "cd"; 
-    ListOfOwnCmds[2] = "help"; 
-    ListOfOwnCmds[3] = "hello"; 
-    ListOfOwnCmds[4] = "desiporn"; 
+    ListOfOwnCmds[1] = "help"; 
+    ListOfOwnCmds[2] = "hello"; 
+    ListOfOwnCmds[3] = "google"; 
     for (i = 0; i < NoOfOwnCmds; i++) { 
         if (strcmp(parsed[0], ListOfOwnCmds[i]) == 0) { 
             switchOwnArg = i + 1; 
@@ -118,21 +123,18 @@ int ownCmdHandler(char** parsed)
   
     switch (switchOwnArg) { 
     case 1: 
-        printf("\nNikal pehli fursat me\n"); 
-        exit(0); 
+        printf("\nVisit Again\n"); 
+        exit(0);  
     case 2: 
-        chdir(parsed[1]); 
-        return 1; 
-    case 3: 
         openHelp(); 
         return 1; 
-    case 4: 
+    case 3: 
         username = getenv("USER"); 
-        printf("\nHello %s.\nGoli beta masti nahi masti nahi"
+        printf("\nHello %s.\nWelcome to my shell"
             "\nUse help to know more..\n", 
             username); 
         return 1; 
-    case 5:
+    case 4:
 	system("firefox http://google.com");
 	return 1;
     default: 
@@ -143,10 +145,10 @@ int ownCmdHandler(char** parsed)
 }  
   
 // function for parsing command words 
-void parseSpace(char* str, char** parsed) 
+int parseSpace(char* str, char** parsed) 
 { 
     int i; 
-    //int count=0;
+    int count=0;
   
     for (i = 0; i < MAXLIST; i++) { 
         parsed[i] = strsep(&str, " "); 
@@ -154,15 +156,17 @@ void parseSpace(char* str, char** parsed)
         if (parsed[i] == NULL) 
             break; 
         if (strlen(parsed[i]) == 0) 
-            i--; 
-    } 
+            i--;
+       count++;	
+    }
+   return count; 
 } 
   
-int processString(char* str, char** parsed) 
+int processString(char* str, char** parsed,int *count) 
 { 
   
     char* strpiped[2]; 
-    parseSpace(str, parsed); 
+    *count=parseSpace(str, parsed); 
   
     if (ownCmdHandler(parsed)) 
         return 0; 
@@ -170,7 +174,7 @@ int processString(char* str, char** parsed)
         return 1; 
 } 
   
-int main(int argc,char **argv) 
+int main() 
 { 
     char inputString[MAXCOM], *parsedArgs[MAXLIST];  
     int execFlag = 0;
@@ -178,20 +182,16 @@ int main(int argc,char **argv)
   
     while (1) { 
         // print shell line 
-        printDir(); 
-        // take input 
+        printDir();  
+	// For counting no. of Commands
+	int count=0;
         if (takeInput(inputString)) 
-            continue; 
-        // process 
-        execFlag = processString(inputString, 
-        parsedArgs); 
+            continue;  
+        execFlag = processString(inputString,parsedArgs,&count); 
         // execflag returns zero if there is no command or owncmd 
-        
         // 1 if it is a simple command or it is a builtin command 
-  
-        // execute 
         if (execFlag == 1) 
-            execArgs(parsedArgs,argc,argv);  
+            execArgs(parsedArgs,count);  
     } 
     return 0; 
 } 
