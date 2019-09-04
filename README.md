@@ -11,7 +11,8 @@ In this code to execute system commands we first fork the main process and execu
 We also used getcwd command to get the directory of the area where the code is present.
 
 __execvp__
--   This function is used to execute any built in function in linux.
+-   This function is used to execute any built in function in linux. 
+
 __execlp__
 -   This function stops the running program and creates the image of the function passed to it and starts executing that function
 
