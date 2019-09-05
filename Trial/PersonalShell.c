@@ -75,16 +75,6 @@ void execArgs(char** parsed,int count)
 	    if(strcmp(parsed[1],">")==0){
 	    	int fileid = open(parsed[2],O_WRONLY|O_CREAT,0666);
 	    	//0666 to make file publicly accssible
-		//    7, rwx, read, write, and execute
-		//    6, rw-, read and write
-		//    5, r-x, read and execute
-		//    4, r--, read-only
-		//    3, -wx, write and execute
-		//    2, -w-, write only
-		//    1, --x, execute only
-		//    0, ---, none
-
-
 		//if not used then sudo will be requried
 		close(1);
 		//to close std output on the shell
