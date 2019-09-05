@@ -6,8 +6,11 @@
 #include<unistd.h> 
 #include<sys/types.h> 
 #include<sys/wait.h> 
-#include<readline/readline.h> 
-#include<readline/history.h> 
+
+//Not used
+//#include<readline/readline.h>
+//#include<readline/history.h> 
+
 #include<sys/stat.h>
 #include<fcntl.h> 
 #define MAXCOM 1000 // max number of letters to be supported 
