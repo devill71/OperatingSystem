@@ -15,7 +15,8 @@
   
 // Clearing the shell using escape sequences 
 #define clear() printf("\033[H\033[J") 
-  
+
+
 // Greeting shell during startup 
 void init_shell() 
 { 
@@ -54,6 +55,7 @@ void printDir()
 { 
     char cwd[1024]; 
     getcwd(cwd, sizeof(cwd)); 
+    //to get current working directory
     printf("\nDir: %s/$:", cwd); 
 } 
   
@@ -67,13 +69,19 @@ void execArgs(char** parsed,int count)
     if (pid == -1) { 
         printf("\nFailed forking child.."); 
         return; 
-    } else if (pid == 0) {
+    } 
+    else if (pid == 0) {
 	if(count==3){
 	    if(strcmp(parsed[1],">")==0){
 	    	int fileid = open(parsed[2],O_WRONLY|O_CREAT,0666);
-	    	close(1);
+	    	//0666 to make file publicly accssible
+		//if not used then sudo will be requried
+		close(1);
+		//to close std output on the shell
 	    	dup(fileid);
+		//to make edits on duplicate file and not harm the orignal
 	    	execlp(parsed[0],parsed[0],NULL);
+		//Stores
 	    	printf("execlp error");
 	    }
 	}
@@ -81,7 +89,8 @@ void execArgs(char** parsed,int count)
             printf("\nCould not execute command.."); 
         } 
         exit(0); 
-    } else { 
+    } 
+    else { 
         // waiting for child to terminate 
         wait(NULL);  
         return; 
@@ -103,17 +112,19 @@ void openHelp()
     return; 
 } 
   
+
 // Function to execute builtin commands 
 int ownCmdHandler(char** parsed) 
 { 
-    int NoOfOwnCmds = 4, i, switchOwnArg = 0; 
+    int NoOfOwnCmds = 5, i, switchOwnArg = 0; 
     char* ListOfOwnCmds[NoOfOwnCmds]; 
     char* username; 
   
     ListOfOwnCmds[0] = "exit"; 
     ListOfOwnCmds[1] = "help"; 
     ListOfOwnCmds[2] = "hello"; 
-    ListOfOwnCmds[3] = "google"; 
+    ListOfOwnCmds[3] = "google";
+    ListOfOwnCmds[4] = "know_more"; 
     for (i = 0; i < NoOfOwnCmds; i++) { 
         if (strcmp(parsed[0], ListOfOwnCmds[i]) == 0) { 
             switchOwnArg = i + 1; 
@@ -136,7 +147,10 @@ int ownCmdHandler(char** parsed)
         return 1; 
     case 4:
 	system("firefox http://google.com");
+	//requires firefox installed
 	return 1;
+    case 5:
+	printf("This is an operating system project of third semester done under supervision of Dr. Bibhas Goshal in Indian Institute of Information Technology. It's aim was to mimic terminal (at crude level).\nThis is avilable at git hub repo: 'https://github.com/devill71/OperatingSystem'\nFor more details contact us at:\n\tAditya : 'https://github.com/devill71'\n\tNikhil : 'https://github.com/Lordnikhil'\n\tHarsh : 'https://github.com/BlackDChase'\n\tKamran : ");
     default: 
         break; 
     } 
