@@ -1,5 +1,6 @@
 # OperatingSystem
 Btech 2nd year os projects
+<<<<<<< HEAD
 This project has the code of the shell equiavalent of linux for assignement lvl in classes
 This code caan can execute self made commands and system commands 
 
@@ -22,3 +23,4 @@ __Self Made commands would be__
    google
    know_more
 '''
+
