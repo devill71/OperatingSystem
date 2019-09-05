@@ -156,7 +156,10 @@ int parseSpace(char* str, char** parsed)
         if (parsed[i] == NULL) 
             break; 
         if (strlen(parsed[i]) == 0) 
-            i--;
+	{
+		i--;
+		continue;
+	}
        count++;	
     }
    return count; 
