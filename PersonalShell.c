@@ -168,7 +168,7 @@ int parseSpace(char* str, char** parsed)
 int processString(char* str, char** parsed,int *count) 
 { 
   
-    char* strpiped[2]; 
+   // char* strpiped[2]; 
     *count=parseSpace(str, parsed); 
   
     if (ownCmdHandler(parsed)) 
