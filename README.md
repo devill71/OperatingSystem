@@ -1,8 +1,20 @@
 # OperatingSystem
 Btech 2nd year os projects
+Group number 24:
+-	Hussain Kamraan		IIT2018036
+-	Aditya Kumar		IIT2018046
+-	Nikhil Kumar Gujrati 	IIT2018048
+-	Harsh Kochar		IIT2018049
+Under Supervision of Dr. Bibhas Ghoshal and teaching assit Ankur Gogoi.
 
-This project has the code of the shell equiavalent of linux for assignement lvl in classes.
-This code caan can execute self made commands and system commands.
+This project has the code of the shell equiavalent of linux for assignment level in classes.
+This code can execute self made commands and system commands.
+To compile the code
+```
+	gcc PersonalShell.c
+```
+It might show a warning regarding `gets`. But it will work fine.
+
 
 __Commands__
 For system commands(ls,ls-l,mkdir,etc..)we have used a function from exec family called execvp.
