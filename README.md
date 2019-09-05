@@ -1,8 +1,8 @@
 # OperatingSystem
 Btech 2nd year os projects
-<<<<<<< HEAD
-This project has the code of the shell equiavalent of linux for assignement lvl in classes
-This code caan can execute self made commands and system commands 
+
+This project has the code of the shell equiavalent of linux for assignement lvl in classes.
+This code caan can execute self made commands and system commands.
 
 __Commands__
 For system commands(ls,ls-l,mkdir,etc..)we have used a function from exec family called execvp.
@@ -16,11 +16,10 @@ __execlp__
 -   This function stops the running program and creates the image of the function passed to it and starts executing that function
 
 __Self Made commands would be__
-'''
+```
    exit
    help
    hello
    google
    know_more
-'''
-
+```
